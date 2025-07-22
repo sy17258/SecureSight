@@ -6,6 +6,13 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check if we're in build mode with placeholder values
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co') {
+      return NextResponse.json({ 
+        message: 'Build mode - Supabase not configured'
+      })
+    }
+
     const { id } = await context.params
 
     // Find the current incident

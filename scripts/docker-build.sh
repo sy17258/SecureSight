@@ -2,8 +2,16 @@
 
 echo "🐳 Building SecureSight Docker image..."
 
-# Build the production image
-docker build -t securesight:latest .
+# Load environment variables
+if [ -f .env.local ]; then
+    export $(cat .env.local | grep -v '^#' | xargs)
+fi
+
+# Build the production image with build args
+docker build \
+  --build-arg NEXT_PUBLIC_SUPABASE_URL="$NEXT_PUBLIC_SUPABASE_URL" \
+  --build-arg SUPABASE_SERVICE_ROLE_KEY="$SUPABASE_SERVICE_ROLE_KEY" \
+  -t securesight:latest .
 
 echo "✅ Build complete!"
 echo "📋 To run the container:"

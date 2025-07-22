@@ -3,6 +3,14 @@ import { supabase } from '../../../../lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if we're in build mode with placeholder values
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co') {
+      return NextResponse.json({ 
+        message: 'Build mode - Supabase not configured',
+        incidents: [] 
+      })
+    }
+
     const { searchParams } = new URL(request.url)
     const resolved = searchParams.get('resolved')
 
